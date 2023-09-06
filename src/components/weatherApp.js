@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import WeatherForm from "./weatherForm"
 import WeatherMainInfo from "./weatherMainInfo";
 import styles from './weatherApp.module.css'
+import Loading from "./loading";
 
 export default function WheaterApp(){
     const [weather,setWeather] = useState(null);
@@ -23,6 +24,10 @@ export default function WheaterApp(){
             const request = await fetch(`${process.env.REACT_APP_URL}&key=${process.env.REACT_APP_KEY}&q=${city}`);
             const json = await request.json()
 
+
+            setTimeout(()=>{
+                setWeather(json);
+            },2000);
             setWeather(json);
             console.log(json)
         }catch (error){
@@ -38,7 +43,9 @@ export default function WheaterApp(){
     return(
         <div className={styles.weatherContainer}>
             <WeatherForm onChangeCity={handleChangeCity}/>
-                <WeatherMainInfo weather={weather}/>
+            {/* Si no tenemos datos del clima mostraremos loading*/}
+            {weather?<WeatherMainInfo weather={weather}/>: <Loading/>}
+                
            
         </div>
     )
